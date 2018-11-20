@@ -165,7 +165,7 @@ def imageSplitter(image, wp=2, hp=3):
 
 # black num, white background
 # returns black to all ratio b/t
-def colorRatio(image):
+def blackSurfaceRatio(image):
     #optimized with numpy fuction
     blackPixels = (image == 0).sum()
     return blackPixels/(len(image)*len(image[0]))

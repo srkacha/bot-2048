@@ -38,7 +38,7 @@ def calculateNumberRepresentation(numberImage):
 
     #now we calcualte the black percentages
     for piece in imagePieces:
-        blackRatio = iu.colorRatio(piece)
+        blackRatio = iu.blackSurfaceRatio(piece)
         representation = representation + (blackRatio, )
     
     return representation
