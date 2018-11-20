@@ -112,14 +112,3 @@ def suggestNextMove(gameState):
         keyboard.press(Key.down)
     elif rand < 1:
         keyboard.press(Key.left)
-
-def is_power(n):
-    if not n == int(n):
-        return False
-    n = int(n)
-    if n == 1:
-        return True
-    elif n > 2:
-        return is_power(n/2.0)
-    else:
-        return False
