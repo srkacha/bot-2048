@@ -5,19 +5,15 @@ import pyautogui
 import numpy as np
 import time
 
-#testing the essentials
+#file for testing 
+#pozz djuka
 
-#waits so i can open the game
+#waiting so I can open the game
 time.sleep(5)
 
 while True:
-    
-    image = pyautogui.screenshot()
-    image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-    time1 = time.time_ns()
-    gameState = bot.getGameStateMatrix(image)
+    screenshot = pyautogui.screenshot()
+    screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+    gameState = bot.getGameStateMatrix(screenshot)
     print(gameState)
-    timediff = (time.time_ns() - time1)/1000000000
-    print(timediff)
-    #time.sleep(1)
     bot.suggestNextMove(gameState)
