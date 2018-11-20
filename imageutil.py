@@ -54,9 +54,7 @@ def getNumbers(blockImage):
     #noBorder = removeBlockBorder(blockImage)
 
     #removing the remainings of the field becaouse the previous method did not do it all, some edges stayed
-    noBorder = sliceImageFrame(blockImage, 15)
-    # cv2.imshow('test', noBorder)
-    # cv2.waitKey(0)
+    noBorder = sliceImageFrame(blockImage, 12)
     numbers = []
 
     #grayscale filter

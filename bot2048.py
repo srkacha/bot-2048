@@ -60,13 +60,10 @@ def determineNumber(numRepresentation):
 #returns a number based on the array of images of the number digits
 def generateNumber(digitImages):
     #if the array is empty then the field was empty
-    print(len(digitImages))
     if len(digitImages) == 0: return 0
     
     number = ''
     for d in digitImages:
-    #     cv2.imshow('dsfds', d)
-    #     cv2.waitKey(0)
         numberRepresentation = calculateNumberRepresentation(d)
         digit = determineNumber(numberRepresentation)
         #if the number is not valid, that means that the recognition process was interrupted, so we return -1
