@@ -51,11 +51,12 @@ def getFieldBlocks(gameField, dimension):
 #returns list of found number images if there are any on the game block image
 def getNumbers(blockImage):
     #removing the field around the actual game block
-    noBorder = removeBlockBorder(blockImage)
+    #noBorder = removeBlockBorder(blockImage)
 
     #removing the remainings of the field becaouse the previous method did not do it all, some edges stayed
-    noBorder = sliceImageFrame(noBorder, 6)
-
+    noBorder = sliceImageFrame(blockImage, 15)
+    # cv2.imshow('test', noBorder)
+    # cv2.waitKey(0)
     numbers = []
 
     #grayscale filter
