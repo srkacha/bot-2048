@@ -5,6 +5,7 @@ import bot2048 as bot
 import pyautogui
 import numpy as np
 from threading import Thread
+import time
 
 #flag for knowing if the bot is active or not
 botActive = True
@@ -12,6 +13,7 @@ botActive = True
 #fuction to be executed when the button is pressed
 def startPlayer():
     botActive = True
+    time.sleep(5)
     while botActive:
         try:
             screenshot = pyautogui.screenshot()
