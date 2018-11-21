@@ -7,6 +7,8 @@ import numpy as np
 from threading import Thread
 import time
 
+#cao goca
+
 #flag for knowing if the bot is active or not
 botActive = True
 
