@@ -4,6 +4,8 @@ import imageutil as iu
 import random
 import time
 import cv2
+import sys
+import numpy as np
 
 #lookup table for storing base number representation values
 digitsLookup = {
@@ -47,15 +49,26 @@ def calculateNumberRepresentation(numberImage):
 #looks up the number based on its six point representation
 #uses cosine similarity for determening the similarity between two vectors
 def determineNumber(numRepresentation):
-    maxSimilarity = 0
+    # maxSimilarity = 0
+    # bestMatchValue = -1
+    # for key, value in digitsLookup.items():
+    #     cosSimilarity = 1 - spatial.distance.cosine(numRepresentation, key)
+    #     if cosSimilarity > maxSimilarity:
+    #         maxSimilarity = cosSimilarity
+    #         bestMatchValue = value
+    minSsdSim = sys.maxsize
     bestMatchValue = -1
     for key, value in digitsLookup.items():
-        cosSimilarity = 1 - spatial.distance.cosine(numRepresentation, key)
-        if cosSimilarity > maxSimilarity:
-            maxSimilarity = cosSimilarity
+        ssdSim = ssd(numRepresentation, key)
+        if ssdSim < minSsdSim:
+            minSsdSim = ssdSim
             bestMatchValue = value
     
     return bestMatchValue
+
+#fuction that calcualtes ssd
+def ssd(a, b):
+    return ((np.asarray(a) - np.asarray(b))**2).sum()
 
 #returns a number based on the array of images of the number digits
 def generateNumber(digitImages):
@@ -77,6 +90,7 @@ def generateNumber(digitImages):
 def getGameStateMatrix(gameImage, dimension = 4):
     #first we extract the game field
     gameField = iu.getGameField(gameImage)
+    gameField = cv2.resize(gameField, (1000, 1000))
     
     #then we resize the field by slicing of some of the border to make it more symetrical
     resizedGameField = iu.sliceImageFrame(gameField, 1)
@@ -86,9 +100,15 @@ def getGameStateMatrix(gameImage, dimension = 4):
     gameStateTupple = ()
 
     #now that we have the game blocks, we are ready to start extracting the numbers
+    #print(len(gameBlocks))
     for block in gameBlocks:
+        
+        # cv2.imshow('sfs', block)
+        # cv2.waitKey(0)
         digitImages = iu.getNumbers(block)   
+        print(len(digitImages))
         blockValue = generateNumber(digitImages)
+        #print(blockValue)
         #if we get None or some number that is not power of two, we return None
         if blockValue == None: return None
         if blockValue != 0 and blockValue not in [2,4,8,16,32,64,128,256,512,1024,2048]: return None

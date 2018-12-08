@@ -14,6 +14,6 @@ time.sleep(5)
 while True:
     screenshot = pyautogui.screenshot()
     screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-    gameState = bot.getGameStateMatrix(screenshot)
+    gameState = bot.getGameStateMatrix(screenshot, 4)
     print(gameState)
     bot.suggestNextMove(gameState)

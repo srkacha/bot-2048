@@ -37,8 +37,8 @@ def getGameField(gameImage):
 
 #returns list of block image objects for given game field image object
 def getFieldBlocks(gameField, dimension):
-    #dimesnion needs to be 4,6 or 8
-    if dimension not in np.array((4,6,8)): return None
+    #dimesnion needs to be 4,5 or 6
+    if dimension not in np.array((4,5,6)): return None
     fieldBlocks = []
     blockWidth = len(gameField)/dimension
     blockHeight = len(gameField)//dimension
@@ -52,6 +52,9 @@ def getFieldBlocks(gameField, dimension):
 def getNumbers(blockImage):
     #removing the field around the actual game block
     #noBorder = removeBlockBorder(blockImage)
+
+    #increase the size of the image
+    blockImage = cv2.resize(blockImage, (400, 400))
 
     #removing the remainings of the field becaouse the previous method did not do it all, some edges stayed
     noBorder = sliceImageFrame(blockImage, 12)
@@ -70,6 +73,9 @@ def getNumbers(blockImage):
     #still needs some work
     #180 was decided experimentaly
     canny = cv2.Canny(blur, 0, 180, 255)
+
+    # cv2.imshow('sdfs', canny)
+    # cv2.waitKey(0)
 
     #finding the number contour
     contourList = cv2.findContours(canny.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -134,8 +140,8 @@ def blackAndWhite(grayImage):
 
     #replacing the pixel values besad on the average
     #optimized with numpy direct indexing
-    grayImage[grayImage>average] = 255
-    grayImage[grayImage<=average] = 0
+    grayImage[grayImage>=average] = 255
+    grayImage[grayImage<average] = 0
 
     return grayImage 
 
