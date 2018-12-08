@@ -53,7 +53,7 @@ def getNumbers(blockImage):
     #removing the field around the actual game block
     #noBorder = removeBlockBorder(blockImage)
 
-    #increase the size of the image
+    #increase the size of the image test
     blockImage = cv2.resize(blockImage, (400, 400))
 
     #removing the remainings of the field becaouse the previous method did not do it all, some edges stayed
