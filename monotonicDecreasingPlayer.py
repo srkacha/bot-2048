@@ -5,7 +5,7 @@ import random
 #returns game state matrix as np multi dim array
 #direction can be 0 - up, 1 - right, 2- down and 3 - left
 #gamestate matrix must be np array
-def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTile = False):
+def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTile = True):
     nextMoveMatrix = 0
     if direction == 0:
         nextMoveMatrix = slideUp(gameStateMatrix, dimension)
@@ -57,7 +57,7 @@ def slide(row):
 def slideUp(gameStateMatrix, dimension):
     transposed = np.transpose(gameStateMatrix)
     flipped = np.flip(transposed, 1)
-    rightSlide = slideRight(transposed, dimension)
+    rightSlide = slideRight(flipped, dimension)
     flipped = np.flip(rightSlide, 1)
     transposed = np.transpose(flipped)
     return transposed
@@ -87,8 +87,9 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
     bestScore = -1
     bestMove = 0
     for move in range(0, 4):
+        #print(move)
         if isMoveValid(gameStateMatrix, dimension, move):
-            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=True)
+            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=False)
             score = evaluateScore(newGameState, dimension)
             if depth != 0:
                 result_move, result_score = nextMoveRecursion(newGameState, dimension, depth - 1, maxDepth)
@@ -113,10 +114,11 @@ def isMoveValid(gameStateMatrix, dimension, move ):
 
     if (result == gameStateMatrix).sum() == dimension**2:
         return False
-    else: return True
+    else:
+        return True
 
 
-def evaluateScore(gameState, dimension, commonRatio=0.25):
+def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     
     linearWeightedVal = 0
     weight = 1.
@@ -153,115 +155,115 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
         invert = not invert
         
     
-    linearWeightedVal3 = 0
-    invert = False
-    weight = 1.
+    # linearWeightedVal3 = 0
+    # invert = False
+    # weight = 1.
     
-    for y in range(0,dimension):
-        for x in range(0,dimension):
-            b_x = x
-            b_y = dimension - 1 - y
-            if invert:
-                b_x = dimension - 1 - x
-            #linearW
-            currVal=gameState[b_y,b_x]
+    # for y in range(0,dimension):
+    #     for x in range(0,dimension):
+    #         b_x = x
+    #         b_y = dimension - 1 - y
+    #         if invert:
+    #             b_x = dimension - 1 - x
+    #         #linearW
+    #         currVal=gameState[b_y,b_x]
            
-            linearWeightedVal3 += currVal*weight
-            weight *= commonRatio
-        invert = not invert
+    #         linearWeightedVal3 += currVal*weight
+    #         weight *= commonRatio
+    #     invert = not invert
         
-    linearWeightedVal4 = 0
-    invert = False
-    weight = 1.
+    # linearWeightedVal4 = 0
+    # invert = False
+    # weight = 1.
     
-    for x in range(0,dimension):
-        for y in range(0,dimension):
-            b_x = dimension - 1 - x
-            b_y = y
-            if invert:
-                b_y = dimension - 1 - y
-            #linearW
-            currVal=gameState[b_y,b_x]
+    # for x in range(0,dimension):
+    #     for y in range(0,dimension):
+    #         b_x = dimension - 1 - x
+    #         b_y = y
+    #         if invert:
+    #             b_y = dimension - 1 - y
+    #         #linearW
+    #         currVal=gameState[b_y,b_x]
            
-            linearWeightedVal4 += currVal*weight
-            weight *= commonRatio
-        invert = not invert
+    #         linearWeightedVal4 += currVal*weight
+    #         weight *= commonRatio
+    #     invert = not invert
         
         
-    linearWeightedVal5 = 0
-    invert = True
-    weight = 1.
+    # linearWeightedVal5 = 0
+    # invert = True
+    # weight = 1.
     
-    for y in range(0,dimension):
-        for x in range(0,dimension):
-            b_x = x
-            b_y = y
-            if invert:
-                b_x = dimension - 1 - x
-            #linearW
-            currVal=gameState[b_y,b_x]
+    # for y in range(0,dimension):
+    #     for x in range(0,dimension):
+    #         b_x = x
+    #         b_y = y
+    #         if invert:
+    #             b_x = dimension - 1 - x
+    #         #linearW
+    #         currVal=gameState[b_y,b_x]
           
-            linearWeightedVal5 += currVal*weight
-            weight *= commonRatio
-        invert = not invert
+    #         linearWeightedVal5 += currVal*weight
+    #         weight *= commonRatio
+    #     invert = not invert
         
-    linearWeightedVal6 = 0
-    invert = True
-    weight = 1.
+    # linearWeightedVal6 = 0
+    # invert = True
+    # weight = 1.
     
 
-    for x in range(0,dimension):
-        for y in range(0,dimension):
-            b_x = x
-            b_y = y
-            if invert:
-                b_y = dimension - 1 - y
-            #linearW
-            currVal=gameState[b_y,b_x]
+    # for x in range(0,dimension):
+    #     for y in range(0,dimension):
+    #         b_x = x
+    #         b_y = y
+    #         if invert:
+    #             b_y = dimension - 1 - y
+    #         #linearW
+    #         currVal=gameState[b_y,b_x]
             
-            linearWeightedVal6 += currVal*weight
-            weight *= commonRatio
-        invert = not invert
+    #         linearWeightedVal6 += currVal*weight
+    #         weight *= commonRatio
+    #     invert = not invert
         
     
-    linearWeightedVal7 = 0
-    invert = True
-    weight = 1.
+    # linearWeightedVal7 = 0
+    # invert = True
+    # weight = 1.
     
-    for y in range(0,dimension):
-        for x in range(0,dimension):
-            b_x = x
-            b_y = dimension - 1 - y
-            if invert:
-                b_x = dimension - 1 - x
-            #linearW
-            currVal=gameState[b_y,b_x]
+    # for y in range(0,dimension):
+    #     for x in range(0,dimension):
+    #         b_x = x
+    #         b_y = dimension - 1 - y
+    #         if invert:
+    #             b_x = dimension - 1 - x
+    #         #linearW
+    #         currVal=gameState[b_y,b_x]
             
-            linearWeightedVal7 += currVal*weight
-            weight *= commonRatio
-        invert = not invert
+    #         linearWeightedVal7 += currVal*weight
+    #         weight *= commonRatio
+    #     invert = not invert
         
-    linearWeightedVal8 = 0
-    invert = True
-    weight = 1.
+    # linearWeightedVal8 = 0
+    # invert = True
+    # weight = 1.
     
-    for x in range(0,dimension):
-        for y in range(0,dimension):
-            b_x = dimension - 1 - x
-            b_y = y
+    # for x in range(0,dimension):
+    #     for y in range(0,dimension):
+    #         b_x = dimension - 1 - x
+    #         b_y = y
             
-            if invert:
-                b_y = dimension - 1 - y
+    #         if invert:
+    #             b_y = dimension - 1 - y
             
-            #linearW
-            currVal=gameState[b_y,b_x]
+    #         #linearW
+    #         currVal=gameState[b_y,b_x]
       
-            linearWeightedVal8 += currVal*weight
-            weight *= commonRatio
-        invert = not invert
+    #         linearWeightedVal8 += currVal*weight
+    #         weight *= commonRatio
+    #     invert = not invert
         
     
-    maxVal = max(linearWeightedVal,linearWeightedVal2,linearWeightedVal3,linearWeightedVal4,linearWeightedVal5,linearWeightedVal6,linearWeightedVal7,linearWeightedVal8)
+    maxVal = max(linearWeightedVal,linearWeightedVal2)#,linearWeightedVal3,linearWeightedVal4,linearWeightedVal5,linearWeightedVal6,linearWeightedVal7,linearWeightedVal8)
 
     return maxVal
 
