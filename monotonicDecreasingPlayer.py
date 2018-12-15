@@ -87,7 +87,7 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
     for move in range(0, 4):
         if isMoveValid(gameStateMatrix, dimension, move):
             newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=True)
-            score = evaluateScore(newGameState)
+            score = evaluateScore(newGameState, dimension)
             if depth != 0:
                 result_move, result_score = nextMoveRecursion(newGameState, dimension, depth - 1, maxDepth)
                 score += result_score*pow(base, maxDepth - depth + 1)
@@ -112,8 +112,167 @@ def isMoveValid(gameStateMatrix, dimension, move ):
         return False
     else: return True
 
+
+def evaluateScore(gameState, dimension, commonRatio=0.25):
+    
+    linearWeightedVal = 0
+    weight = 1.
+    invert = False
+    
+    for y in range(0,dimension):
+            for x in range(0,dimension):
+                b_x = x
+                b_y = y
+                if invert:
+                    b_x = dimension - 1 - x
+                #linearW
+                currVal=gameState(b_x,b_y)
+                
+                linearWeightedVal += currVal*weight
+                weight *= commonRatio
+            invert = not invert
+            
+    linearWeightedVal2 = 0
+    invert = False
+    weight = 1.
+    
+    for x in range(0,dimension):
+        for y in range(0,dimension):
+            b_x = x
+            b_y = y
+            if invert:
+                b_y = dimension - 1 - y
+            #linearW
+            currVal=gameState(b_x,b_y)
+            
+            linearWeightedVal2 += currVal*weight
+            weight *= commonRatio
+        invert = not invert
+        
+    
+    linearWeightedVal3 = 0
+    invert = False
+    weight = 1.
+    
+    for y in range(0,dimension):
+        for x in range(0,dimension):
+            b_x = x
+            b_y = dimension - 1 - y
+            if invert:
+                b_x = dimension - 1 - x
+            #linearW
+            currVal=gameState(b_x,b_y)
+           
+            linearWeightedVal3 += currVal*weight
+            weight *= commonRatio
+        invert = not invert
+        
+    linearWeightedVal4 = 0
+    invert = False
+    weight = 1.
+    
+    for x in range(0,dimension):
+        for y in range(0,dimension):
+            b_x = dimension - 1 - x
+            b_y = y
+            if invert:
+                b_y = dimension - 1 - y
+            #linearW
+            currVal=gameState(b_x,b_y)
+           
+            linearWeightedVal4 += currVal*weight
+            weight *= commonRatio
+        invert = not invert
+        
+        
+    linearWeightedVal5 = 0
+    invert = True
+    weight = 1.
+    
+    for y in range(0,dimension):
+        for x in range(0,dimension):
+            b_x = x
+            b_y = y
+            if invert:
+                b_x = dimension - 1 - x
+            #linearW
+            currVal=gameState(b_x,b_y)
+          
+            linearWeightedVal5 += currVal*weight
+            weight *= commonRatio
+        invert = not invert
+        
+    linearWeightedVal6 = 0
+    invert = True
+    weight = 1.
+    
+
+    for x in range(0,dimension):
+        for y in range(0,dimension):
+            b_x = x
+            b_y = y
+            if invert:
+                b_y = dimension - 1 - y
+            #linearW
+            currVal=gameState(b_x,b_y)
+            
+            linearWeightedVal6 += currVal*weight
+            weight *= commonRatio
+        invert = not invert
+        
+    
+    linearWeightedVal7 = 0
+    invert = True
+    weight = 1.
+    
+    for y in range(0,dimension):
+        for x in range(0,dimension):
+            b_x = x
+            b_y = dimension - 1 - y
+            if invert:
+                b_x = dimension - 1 - x
+            #linearW
+            currVal=gameState(b_x,b_y)
+            
+            linearWeightedVal7 += currVal*weight
+            weight *= commonRatio
+        invert = not invert
+        
+    linearWeightedVal8 = 0
+    invert = True
+    weight = 1.
+    
+    for x in range(0,dimension):
+        for y in range(0,dimension):
+            b_x = dimension - 1 - x
+            b_y = y
+            
+            if invert:
+                b_y = dimension - 1 - y
+            
+            #linearW
+            currVal=gameState(b_x,b_y)
+      
+            linearWeightedVal8 += currVal*weight
+            weight *= commonRatio
+        invert = not invert
+        
+    
+    maxVal = max(linearWeightedVal,linearWeightedVal2,linearWeightedVal3,linearWeightedVal4,linearWeightedVal5,linearWeightedVal6,linearWeightedVal7,linearWeightedVal8)
+
+    return maxVal
+
+    
 temp = (2, 8, 2, 0, 16, 2 ,0, 0, 2, 0, 0, 0, 0, 0, 2, 0)
 temp = np.asarray(temp)
 temp = temp.reshape(4,4)
 result = determineNextGameState(temp, 4, 2, True)
 print(result)
+
+
+
+
+
+
+
+
