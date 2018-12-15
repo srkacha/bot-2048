@@ -1,10 +1,11 @@
 import numpy as np
+import random
 
 #determines the future game state when a move is played
 #returns game state matrix as np multi dim array
 #direction can be 0 - up, 1 - right, 2- down and 3 - left
 #gamestate matrix must be np array
-def determineNextGameState(gameStateMatrix, dimension, direction):
+def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTile = False):
     nextMoveMatrix = 0
     if direction == 0:
         nextMoveMatrix = slideUp(gameStateMatrix, dimension)
@@ -13,6 +14,19 @@ def determineNextGameState(gameStateMatrix, dimension, direction):
     elif direction == 2:
         nextMoveMatrix = slideDown(gameStateMatrix, dimension)
     else: nextMoveMatrix = slideLeft(gameStateMatrix, dimension)
+
+    #generating the new tile
+    if generateNewTile:
+        randomNumber = random.uniform(0, 1)
+        generated = False
+        while not generated:
+            randomRow = random.randint(0, dimension - 1)
+            randomCol = random.randint(0, dimension - 1)
+            if nextMoveMatrix[randomRow][randomCol] == 0:
+                nextMoveMatrix[randomRow][randomCol] = 2 if randomNumber<0.9 else 4
+                print(generated, randomRow, randomCol)
+                generated = True
+
     return nextMoveMatrix
 
 
@@ -61,9 +75,16 @@ def slideLeft(gameStateMatrix, dimension):
     flipped = np.flip(rightSlide, 1)
     return flipped
 
+#determines the next move to make
+def nextMove(gameStateMatrix, recursionDepth = 3):
+    return 0
+
+def nextMoveRecursion():
+    return 0
+
 
 temp = (2, 8, 2, 0, 16, 2 ,0, 0, 2, 0, 0, 0, 0, 0, 2, 0)
 temp = np.asarray(temp)
 temp = temp.reshape(4,4)
-result = slideDown(temp, 4)
+result = determineNextGameState(temp, 4, 2, True)
 print(result)
