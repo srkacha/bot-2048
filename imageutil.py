@@ -54,7 +54,7 @@ def getNumbers(blockImage):
     #noBorder = removeBlockBorder(blockImage)
 
     #increase the size of the image test
-    blockImage = cv2.resize(blockImage, (400, 400))
+    blockImage = cv2.resize(blockImage, (600, 600))
 
     #removing the remainings of the field becaouse the previous method did not do it all, some edges stayed
     noBorder = sliceImageFrame(blockImage, 12)
@@ -135,6 +135,7 @@ def increaseContrast(image, alfa = 1.2):
 #finds average pixel value
 #replaces pixel values so the ones below the average become 0, the other ones become 255
 def blackAndWhite(grayImage):
+    grayImage = twoToneGrayscale(grayImage)
     #calculating the average
     average = int(grayImage.mean())
 
@@ -144,6 +145,15 @@ def blackAndWhite(grayImage):
     grayImage[grayImage<average] = 0
 
     return grayImage 
+
+#image needs to be grayscale
+#makes the image contain only two grayscale values
+def twoToneGrayscale(grayscale):
+    maxValue = grayscale.max()
+    minValue = grayscale.min()
+    grayscale[maxValue - grayscale <= grayscale - minValue] = maxValue
+    grayscale[maxValue - grayscale > grayscale - minValue] = minValue
+    return grayscale
 
 #slices a percentual part of the image from all four sides
 #calcualtes the offset based on the percent we want and returns us a new image croped by the offset on all four sides

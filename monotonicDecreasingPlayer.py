@@ -89,7 +89,7 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
     bestMove = 0
     for move in range(0, 4):
         if isMoveValid(gameStateMatrix, dimension, move):
-            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=True)
+            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=False)
             score = evaluateScore(newGameState, dimension)
             if depth != 0:
                 result_move, result_score = nextMoveRecursion(newGameState, dimension, depth - 1, maxDepth)
@@ -117,7 +117,7 @@ def isMoveValid(gameStateMatrix, dimension, move ):
     else: return True
 
 
-def evaluateScore(gameState, dimension, commonRatio=0.25):
+def evaluateScore(gameState, dimension, commonRatio=0.15):
     
     linearWeightedVal = 0
     weight = 1.
@@ -130,7 +130,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
                 if invert:
                     b_x = dimension - 1 - x
                 #linearW
-                currVal=gameState(b_x,b_y)
+                currVal=gameState[b_y,b_x]
                 
                 linearWeightedVal += currVal*weight
                 weight *= commonRatio
@@ -147,7 +147,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
             if invert:
                 b_y = dimension - 1 - y
             #linearW
-            currVal=gameState(b_x,b_y)
+            currVal=gameState[b_y,b_x]
             
             linearWeightedVal2 += currVal*weight
             weight *= commonRatio
@@ -165,7 +165,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
             if invert:
                 b_x = dimension - 1 - x
             #linearW
-            currVal=gameState(b_x,b_y)
+            currVal=gameState[b_y,b_x]
            
             linearWeightedVal3 += currVal*weight
             weight *= commonRatio
@@ -182,7 +182,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
             if invert:
                 b_y = dimension - 1 - y
             #linearW
-            currVal=gameState(b_x,b_y)
+            currVal=gameState[b_y,b_x]
            
             linearWeightedVal4 += currVal*weight
             weight *= commonRatio
@@ -200,7 +200,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
             if invert:
                 b_x = dimension - 1 - x
             #linearW
-            currVal=gameState(b_x,b_y)
+            currVal=gameState[b_y,b_x]
           
             linearWeightedVal5 += currVal*weight
             weight *= commonRatio
@@ -218,7 +218,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
             if invert:
                 b_y = dimension - 1 - y
             #linearW
-            currVal=gameState(b_x,b_y)
+            currVal=gameState[b_y,b_x]
             
             linearWeightedVal6 += currVal*weight
             weight *= commonRatio
@@ -236,7 +236,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
             if invert:
                 b_x = dimension - 1 - x
             #linearW
-            currVal=gameState(b_x,b_y)
+            currVal=gameState[b_y,b_x]
             
             linearWeightedVal7 += currVal*weight
             weight *= commonRatio
@@ -255,7 +255,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
                 b_y = dimension - 1 - y
             
             #linearW
-            currVal=gameState(b_x,b_y)
+            currVal=gameState[b_y,b_x]
       
             linearWeightedVal8 += currVal*weight
             weight *= commonRatio
@@ -265,11 +265,4 @@ def evaluateScore(gameState, dimension, commonRatio=0.25):
     maxVal = max(linearWeightedVal,linearWeightedVal2,linearWeightedVal3,linearWeightedVal4,linearWeightedVal5,linearWeightedVal6,linearWeightedVal7,linearWeightedVal8)
 
     return maxVal
-
-    
-temp = (2, 8, 2, 0, 16, 2 ,0, 0, 2, 0, 0, 0, 0, 0, 2, 0)
-temp = np.asarray(temp)
-temp = temp.reshape(4,4)
-result = determineNextGameState(temp, 4, 2, True)
-print(result)
 
