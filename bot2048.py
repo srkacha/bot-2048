@@ -1,12 +1,12 @@
 from scipy import spatial
 from pynput.keyboard import Key, Controller
 import imageutil as iu
-import random
 import time
 import cv2
 import sys
 import numpy as np
 import greedy
+import randomPlayer
 
 #lookup table for storing base number representation values
 digitsLookup = {
@@ -125,7 +125,7 @@ keyboard = Controller()
 def suggestNextMove(gameState, dimension):
     if gameState == None: return
     
-    nextMove = greedy.greedyMove(gameState, dimension)
+    nextMove = randomPlayer.randomMove(gameState, dimension)
     if nextMove == 0:
         keyboard.press(Key.up)
     elif nextMove == 1:

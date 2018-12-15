@@ -11,9 +11,11 @@ import time
 #waiting so I can open the game
 time.sleep(5)
 
+dim = 4
+
 while True:
     screenshot = pyautogui.screenshot()
     screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-    gameState = bot.getGameStateMatrix(screenshot, 4)
+    gameState = bot.getGameStateMatrix(screenshot, dim)
     print(gameState)
-    bot.suggestNextMove(gameState, 4)
+    bot.suggestNextMove(gameState, dim)

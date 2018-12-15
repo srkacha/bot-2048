@@ -2,6 +2,7 @@ import numpy as np
 
 nextMove = 0
 previousGameState = 0
+firstMove = True
 
 #function takes game state tupple and returns one of the folowing values
 # 0 - up
@@ -11,6 +12,13 @@ previousGameState = 0
 def greedyMove(gameStateTupple, dimension):
     global previousGameState
     global nextMove
+    global firstMove
+
+    #if it's the first move
+    if firstMove: 
+        previousGameState = np.full((dimension, dimension), 0)
+        firstMove = not firstMove
+    
     gameStateArray = np.asarray(gameStateTupple)
     reshapedArray = np.reshape(gameStateArray, (dimension,dimension))
 
@@ -57,9 +65,3 @@ def greedyMove(gameStateTupple, dimension):
     previousGameState = reshapedArray
 
     return nextMove
-
-
-
-#testing
-testTupple = (2, 4, 8, 64, 0, 2, 4, 2, 0, 0, 0, 2, 0, 0, 0, 0)
-print(greedyMove(testTupple, 4))
