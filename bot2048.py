@@ -6,6 +6,7 @@ import time
 import cv2
 import sys
 import numpy as np
+import greedy
 
 #lookup table for storing base number representation values
 digitsLookup = {
@@ -105,8 +106,7 @@ def getGameStateMatrix(gameImage, dimension = 4):
         
         # cv2.imshow('sfs', block)
         # cv2.waitKey(0)
-        digitImages = iu.getNumbers(block)   
-        print(len(digitImages))
+        digitImages = iu.getNumbers(block)
         blockValue = generateNumber(digitImages)
         #print(blockValue)
         #if we get None or some number that is not power of two, we return None
@@ -121,14 +121,16 @@ def getGameStateMatrix(gameImage, dimension = 4):
 #global keyborad object
 keyboard = Controller()
 
-def suggestNextMove(gameState):
+#function takes the game state tupple and dimension and plays the next move
+def suggestNextMove(gameState, dimension):
     if gameState == None: return
-    rand = random.uniform(0, 1)
-    if rand < 0.6:
+    
+    nextMove = greedy.greedyMove(gameState, dimension)
+    if nextMove == 0:
         keyboard.press(Key.up)
-    elif rand < 0.9:
+    elif nextMove == 1:
         keyboard.press(Key.right)
-    elif rand <0.995:
+    elif nextMove == 2:
         keyboard.press(Key.down)
-    elif rand < 1:
+    elif nextMove == 3:
         keyboard.press(Key.left)
