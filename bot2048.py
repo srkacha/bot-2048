@@ -11,15 +11,15 @@ import monotonicDecreasingPlayer as mdp
 
 #lookup table for storing base number representation values
 digitsLookup = {
-    (0.474, 0.4952, 0.5076, 0.5168, 0.5044, 0.5248) : 0,
-    (0.2852, 0.72, 0.0884, 0.88, 0.0, 0.814) : 1,
-    (0.4124, 0.5492, 0.1188, 0.548, 0.7064, 0.5388) : 2,
-    (0.4688, 0.6232, 0.1952, 0.674, 0.4872, 0.6396) : 3,
-    (0.0932, 0.58, 0.4856, 0.5136, 0.4004, 0.6852) : 4,
-    (0.5348, 0.444, 0.4892, 0.6028, 0.4428, 0.5928) : 5,
-    (0.4804, 0.4156, 0.708, 0.6248, 0.5556, 0.6176) : 6,
+    (0.5876, 0.5948, 0.5632, 0.5648, 0.6136, 0.6208) : 0,
+    (0.4348, 0.8968, 0.0392, 0.9372, 0.0, 0.9328) : 1,
+    (0.5124, 0.6448, 0.1348, 0.568, 0.8452, 0.6116) : 2,
+    (0.5052, 0.682, 0.2048, 0.7024, 0.5196, 0.706) : 3,
+    (0.1524, 0.6624, 0.5328, 0.5232, 0.518, 0.7552) : 4,
+    (0.6432, 0.4972, 0.5408, 0.6664, 0.5132, 0.6596) : 5,
+    (0.5764, 0.4448, 0.7972, 0.684, 0.6376, 0.6628) : 6,
     (1, 1, 1, 1, 1, 1) : 7,
-    (0.5212, 0.5392, 0.612, 0.612, 0.5988, 0.6188) : 8,
+    (0.6144, 0.6156, 0.6768, 0.6568, 0.6624, 0.662) : 8,
     (1, 1, 1, 1, 1, 1) : 9
 }
 
@@ -36,7 +36,7 @@ def calculateNumberRepresentation(numberImage):
     #inverting image if the first pixel is black
     if bnw[0, 0] == 0: 
         bnw = iu.invertImage(bnw)
-
+    
     #then we split the image into 6 equal pieces
     imagePieces = iu.imageSplitter(bnw)
 
@@ -44,7 +44,6 @@ def calculateNumberRepresentation(numberImage):
     for piece in imagePieces:
         blackRatio = iu.blackSurfaceRatio(piece)
         representation = representation + (blackRatio, )
-    
     return representation
 
 
@@ -104,15 +103,12 @@ def getGameStateMatrix(gameImage, dimension = 4):
     #now that we have the game blocks, we are ready to start extracting the numbers
     #print(len(gameBlocks))
     for block in gameBlocks:
-        
-        # cv2.imshow('sfs', block)
-        # cv2.waitKey(0)
         digitImages = iu.getNumbers(block)
         blockValue = generateNumber(digitImages)
         #print(blockValue)
         #if we get None or some number that is not power of two, we return None
         if blockValue == None: return None
-        if blockValue != 0 and blockValue not in [2,4,8,16,32,64,128,256,512,1024,2048]: return None
+        if blockValue != 0 and blockValue not in [2,4,8,16,32,64,128,256,512,1024,2048, 4096, 8192]: return None
 
         gameStateTupple = gameStateTupple + (blockValue, )
     

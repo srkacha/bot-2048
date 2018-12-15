@@ -89,7 +89,7 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
     bestMove = 0
     for move in range(0, 4):
         if isMoveValid(gameStateMatrix, dimension, move):
-            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=False)
+            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=True)
             score = evaluateScore(newGameState, dimension)
             if depth != 0:
                 result_move, result_score = nextMoveRecursion(newGameState, dimension, depth - 1, maxDepth)
@@ -117,7 +117,7 @@ def isMoveValid(gameStateMatrix, dimension, move ):
     else: return True
 
 
-def evaluateScore(gameState, dimension, commonRatio=0.15):
+def evaluateScore(gameState, dimension, commonRatio=0.25):
     
     linearWeightedVal = 0
     weight = 1.

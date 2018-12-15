@@ -4,6 +4,7 @@ import bot2048 as bot
 import pyautogui
 import numpy as np
 import time
+import imageio
 
 #file for testing 
 #pozz djuka

@@ -74,8 +74,6 @@ def getNumbers(blockImage):
     #180 was decided experimentaly
     canny = cv2.Canny(blur, 0, 180, 255)
 
-    # cv2.imshow('sdfs', canny)
-    # cv2.waitKey(0)
 
     #finding the number contour
     contourList = cv2.findContours(canny.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -92,6 +90,8 @@ def getNumbers(blockImage):
         number = noBorder[y: y + h, x: x + w]
         #resizing any number to a fixed size of 150x100
         number = cv2.resize(number, (100, 150))
+        # cv2.imshow('sdfs', number)
+        # cv2.waitKey(0)
         numbers.append(number)
 
     
