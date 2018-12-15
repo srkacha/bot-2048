@@ -28,16 +28,16 @@ def randomMove(gameStateTupple, dimension):
     else: repeatedMoves = 0
 
     if repeatedMoves == 0:
-        if randomNumber < 0.66: nextMove = 0
+        if randomNumber < 0.75: nextMove = 0
         elif randomNumber < 0.9: nextMove = 1
-        elif randomNumber < 0.985: nextMove = 2
+        elif randomNumber < 0.995: nextMove = 2
         else: nextMove = 3
     elif repeatedMoves == 1:
-        if randomNumber < 0.66: nextMove = 1
-        elif randomNumber < 0.9: nextMove = 2
+        if randomNumber < 0.80: nextMove = 1
+        elif randomNumber < 0.5: nextMove = 2
         else: nextMove = 3
     elif repeatedMoves == 2:
-        if randomNumber < 0.9: nextMove = 2
+        if randomNumber < 0.95: nextMove = 2
         else: nextMove = 3
     else: nextMove = 3
 
