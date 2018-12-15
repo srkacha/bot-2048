@@ -7,6 +7,7 @@ import sys
 import numpy as np
 import greedy
 import randomPlayer
+import monotonicDecreasingPlayer as mdp
 
 #lookup table for storing base number representation values
 digitsLookup = {
@@ -125,7 +126,7 @@ keyboard = Controller()
 def suggestNextMove(gameState, dimension):
     if gameState == None: return
     
-    nextMove = randomPlayer.randomMove(gameState, dimension)
+    nextMove = mdp.nextMove(gameState, dimension)
     if nextMove == 0:
         keyboard.press(Key.up)
     elif nextMove == 1:
