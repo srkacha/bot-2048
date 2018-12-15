@@ -16,7 +16,7 @@ def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTil
     else: nextMoveMatrix = slideLeft(gameStateMatrix, dimension)
 
     #generating the new tile
-    if generateNewTile:
+    if generateNewTile and 0 in nextMoveMatrix:
         randomNumber = random.uniform(0, 1)
         generated = False
         while not generated:
@@ -24,7 +24,6 @@ def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTil
             randomCol = random.randint(0, dimension - 1)
             if nextMoveMatrix[randomRow][randomCol] == 0:
                 nextMoveMatrix[randomRow][randomCol] = 2 if randomNumber<0.9 else 4
-                print(generated, randomRow, randomCol)
                 generated = True
 
     return nextMoveMatrix
@@ -77,11 +76,15 @@ def slideLeft(gameStateMatrix, dimension):
 
 #determines the next move to make
 def nextMove(gameStateMatrix, dimension, recursionDepth = 3):
-    return 0
+    gameStateArray = np.asarray(gameStateMatrix)
+    reshaped = gameStateArray.reshape((dimension, dimension))
+    move, score = nextMoveRecursion(reshaped, dimension, recursionDepth, recursionDepth)
+    return move
 
 #recursivly calculates the heursitic score for a given depth and base parameter
 #base parameter determines how much the score is affected the deeper the algorithm goes
 def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
+    print(depth)
     bestScore = -1
     bestMove = 0
     for move in range(0, 4):
@@ -94,6 +97,7 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
             
             if score > bestScore:
                 bestScore = score
+                bestMove = move
     return bestMove, bestScore
 
 #determines if the move is valid or not
@@ -112,8 +116,11 @@ def isMoveValid(gameStateMatrix, dimension, move ):
         return False
     else: return True
 
-temp = (2, 8, 2, 0, 16, 2 ,0, 0, 2, 0, 0, 0, 0, 0, 2, 0)
-temp = np.asarray(temp)
-temp = temp.reshape(4,4)
-result = determineNextGameState(temp, 4, 2, True)
-print(result)
+def evaluateScore(gameStateMatrix):
+    return gameStateMatrix.sum()
+
+# temp = (2, 8, 2, 0, 16, 2 ,0, 0, 2, 0, 0, 0, 0, 0, 2, 0)
+# temp = np.asarray(temp)
+# temp = temp.reshape(4,4)
+# result = determineNextGameState(temp, 4, 2, True)
+# print(result)
