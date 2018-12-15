@@ -84,7 +84,6 @@ def nextMove(gameStateMatrix, dimension, recursionDepth = 3):
 #recursivly calculates the heursitic score for a given depth and base parameter
 #base parameter determines how much the score is affected the deeper the algorithm goes
 def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
-    print(depth)
     bestScore = -1
     bestMove = 0
     for move in range(0, 4):

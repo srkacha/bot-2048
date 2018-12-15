@@ -151,6 +151,11 @@ def blackAndWhite(grayImage):
 def twoToneGrayscale(grayscale):
     maxValue = grayscale.max()
     minValue = grayscale.min()
+
+    #special case if the game block is empty
+    if maxValue - minValue < 5: maxValue = minValue
+
+    #now we set the new values
     grayscale[maxValue - grayscale <= grayscale - minValue] = maxValue
     grayscale[maxValue - grayscale > grayscale - minValue] = minValue
     return grayscale
