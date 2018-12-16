@@ -8,6 +8,7 @@
 import sys
 import bot2048 as bot
 from threading import Thread
+import webbrowser
 
 try:
     import Tkinter as tk
@@ -68,7 +69,7 @@ class Toplevel1:
         self.style.map('.',background=
             [('selected', _compcolor), ('active',_ana2color)])
 
-        top.geometry("450x220+650+150")
+        top.geometry("430x270+578+244")
         top.title("2048 Bot")
         top.configure(background="#fff")
 
@@ -81,8 +82,8 @@ class Toplevel1:
         self.Label1.configure(text='''Game dimension:''')
 
         self.dimensionCombo = ttk.Combobox(top)
-        self.dimensionCombo.place(relx=0.422, rely=0.04, relheight=0.124
-                , relwidth=0.516)
+        self.dimensionCombo.place(relx=0.422, rely=0.037, relheight=0.115
+                , relwidth=0.54)
         self.value_list = ['4x4','5x5','8x8']
         self.dimensionCombo.configure(values=self.value_list)
         self.dimensionCombo.configure(textvariable=app_support.combobox)
@@ -99,8 +100,8 @@ class Toplevel1:
         self.Label2.configure(text='''Algorithm:''')
 
         self.algCombo = ttk.Combobox(top)
-        self.algCombo.place(relx=0.422, rely=0.24, relheight=0.124
-                , relwidth=0.516)
+        self.algCombo.place(relx=0.422, rely=0.222, relheight=0.115
+                , relwidth=0.54)
         self.value_list2 = ['Random','Greedy','Monotonic Decreasing','Expectimax']
         self.algCombo.configure(values=self.value_list2)
         self.algCombo.configure(textvariable=app_support.combobox2)
@@ -109,7 +110,7 @@ class Toplevel1:
         self.algCombo.current(0)
 
         self.startButton = tk.Button(top)
-        self.startButton.place(relx=0.6, rely=0.5, height=40, width=150)
+        self.startButton.place(relx=0.628, rely=0.407, height=40, width=150)
         self.startButton.configure(activebackground="#ececec")
         self.startButton.configure(activeforeground="#000000")
         self.startButton.configure(background="#005b96")
@@ -123,7 +124,7 @@ class Toplevel1:
         self.startButton.bind('<Button-1>', self.startPlayingButton)
 
         self.stopButton = tk.Button(top)
-        self.stopButton.place(relx=0.6, rely=0.727, height=42, width=150)
+        self.stopButton.place(relx=0.628, rely=0.593, height=42, width=150)
         self.stopButton.configure(activebackground="#ececec")
         self.stopButton.configure(activeforeground="#000000")
         self.stopButton.configure(background="#ff6f69")
@@ -136,7 +137,7 @@ class Toplevel1:
         self.stopButton.bind('<Button-1>', self.stopPlayingButton)
 
         self.Labelframe1 = tk.LabelFrame(top)
-        self.Labelframe1.place(relx=0.022, rely=0.5, relheight=0.386 , relwidth=0.511)
+        self.Labelframe1.place(relx=0.023, rely=0.407, relheight=0.386 , relwidth=0.511)
         self.Labelframe1.configure(relief='groove')
         self.Labelframe1.configure(font="Arial")
         self.Labelframe1.configure(foreground="black")
@@ -152,8 +153,27 @@ class Toplevel1:
         self.statusLabel.configure(foreground="#000000")
         self.statusLabel.configure(text='''STOPPED''')
 
+        self.browserButton = tk.Button(top)
+        self.browserButton.place(relx=0.023, rely=0.815, height=42, width=410)
+        self.browserButton.configure(activebackground="#ececec")
+        self.browserButton.configure(activeforeground="#000000")
+        self.browserButton.configure(background="#fff")
+        self.browserButton.configure(disabledforeground="#a3a3a3")
+        self.browserButton.configure(font="Arial")
+        self.browserButton.configure(foreground="#000000")
+        self.browserButton.configure(highlightbackground="#d9d9d9")
+        self.browserButton.configure(highlightcolor="black")
+        self.browserButton.configure(pady="0")
+        self.browserButton.configure(text='''Start game in browser''')
+        self.browserButton.configure(width=410)
+        self.browserButton.bind('<Button-1>', self.openBrowserButton)
+
+
         self.thread = None
     
+    def openBrowserButton(self, event):
+        webbrowser.open('http://2048game.com/')
+
     def startPlayingButton(self, event):
         selectedDim = self.dimensionCombo.get()
         self.dimension = int(selectedDim[0])
