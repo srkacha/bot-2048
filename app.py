@@ -6,6 +6,7 @@
 #    Dec 16, 2018 01:20:40 PM CET  platform: Windows NT
 
 import sys
+import bot2048 as bot
 
 try:
     import Tkinter as tk
@@ -83,6 +84,7 @@ class Toplevel1:
         self.dimensionCombo.configure(values=self.value_list)
         self.dimensionCombo.configure(textvariable=app_support.combobox)
         self.dimensionCombo.configure(takefocus="")
+        self.dimensionCombo.current(0)
 
         self.Label2 = tk.Label(top)
         self.Label2.place(relx=0.022, rely=0.24, height=30, width=97)
@@ -95,10 +97,11 @@ class Toplevel1:
         self.algCombo = ttk.Combobox(top)
         self.algCombo.place(relx=0.422, rely=0.24, relheight=0.124
                 , relwidth=0.516)
-        self.value_list = ['Random','Greedy','Monotonic Decreasing','Expectimax']
-        self.algCombo.configure(values=self.value_list)
-        self.algCombo.configure(textvariable=app_support.combobox)
+        self.value_list2 = ['Random','Greedy','Monotonic Decreasing','Expectimax']
+        self.algCombo.configure(values=self.value_list2)
+        self.algCombo.configure(textvariable=app_support.combobox2)
         self.algCombo.configure(takefocus="")
+        self.algCombo.current(0)
 
         self.startButton = tk.Button(top)
         self.startButton.place(relx=0.6, rely=0.76, height=40, width=150)
@@ -112,6 +115,13 @@ class Toplevel1:
         self.startButton.configure(highlightcolor="black")
         self.startButton.configure(pady="0")
         self.startButton.configure(text='''Start''')
+        self.startButton.bind('<Button-1>', self.startPlayingButton)
+    
+    def startPlayingButton(self, event):
+        selectedDim = self.dimensionCombo.get()
+        dimension = int(selectedDim[0])
+        alg = self.algCombo.get()
+        bot.startPlaying(dimension, alg)
 
 if __name__ == '__main__':
     vp_start_gui()
