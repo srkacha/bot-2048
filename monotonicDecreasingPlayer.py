@@ -5,7 +5,7 @@ import random
 #returns game state matrix as np multi dim array
 #direction can be 0 - up, 1 - right, 2- down and 3 - left
 #gamestate matrix must be np array
-def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTile = True):
+def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTile = False):
     nextMoveMatrix = 0
     if direction == 0:
         nextMoveMatrix = slideUp(gameStateMatrix, dimension)
@@ -23,7 +23,7 @@ def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTil
             randomRow = random.randint(0, dimension - 1)
             randomCol = random.randint(0, dimension - 1)
             if nextMoveMatrix[randomRow][randomCol] == 0:
-                nextMoveMatrix[randomRow][randomCol] = 2 if randomNumber<0.9 else 4
+                nextMoveMatrix[randomRow][randomCol] = 2 if randomNumber<0.9 else 2
                 generated = True
 
     return nextMoveMatrix
@@ -90,7 +90,9 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
         #print(move)
         if isMoveValid(gameStateMatrix, dimension, move):
             newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=False)
-            score = evaluateScore(newGameState, dimension)
+            score, worstTile = evaluateScore(newGameState, dimension)
+
+            newGameState[worstTile[0]][worstTile[1]] = 2 if random.uniform(0,1) < 0.9 else 4
             if depth != 0:
                 result_move, result_score = nextMoveRecursion(newGameState, dimension, depth - 1, maxDepth)
                 score += result_score*pow(base, maxDepth - depth + 1)
@@ -102,7 +104,7 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
 
 #determines if the move is valid or not
 #move can be 0, 1, 2 or 3
-def isMoveValid(gameStateMatrix, dimension, move ):
+def isMoveValid(gameStateMatrix, dimension, move):
     result = 0
     if move == 0:
         result = slideUp(gameStateMatrix, dimension)
@@ -118,11 +120,14 @@ def isMoveValid(gameStateMatrix, dimension, move ):
         return True
 
 
-def evaluateScore(gameState, dimension, commonRatio=0.15 ):
+def evaluateScore(gameState, dimension, commonRatio=0.25):
     
     linearWeightedVal = 0
     weight = 1.
     invert = False
+
+    worstCaseTiles = []
+    worstCaseTile = (-1, -1)
     
     for y in range(0,dimension):
             for x in range(0,dimension):
@@ -132,7 +137,10 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
                     b_x = dimension - 1 - x
                 #linearW
                 currVal=gameState[b_y,b_x]
-                
+                if(currVal == 0 and worstCaseTile == (-1, -1)):
+                    worstCaseTile = (b_y, b_x)
+                    worstCaseTiles.append(worstCaseTile)
+
                 linearWeightedVal += currVal*weight
                 weight *= commonRatio
             invert = not invert
@@ -140,6 +148,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     linearWeightedVal2 = 0
     invert = False
     weight = 1.
+    worstCaseTile = (-1, -1)
     
     for x in range(0,dimension):
         for y in range(0,dimension):
@@ -149,7 +158,10 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
                 b_y = dimension - 1 - y
             #linearW
             currVal=gameState[b_y,b_x]
-            
+            if(currVal == 0 and worstCaseTile == (-1, -1)):
+                    worstCaseTile = (b_y, b_x)
+                    worstCaseTiles.append(worstCaseTile)
+
             linearWeightedVal2 += currVal*weight
             weight *= commonRatio
         invert = not invert
@@ -158,6 +170,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     # linearWeightedVal3 = 0
     # invert = False
     # weight = 1.
+    # worstCaseTile = (-1, -1)
     
     # for y in range(0,dimension):
     #     for x in range(0,dimension):
@@ -167,7 +180,9 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     #             b_x = dimension - 1 - x
     #         #linearW
     #         currVal=gameState[b_y,b_x]
-           
+    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
+    #                 worstCaseTile = (b_y, b_x)
+    #                 worstCaseTiles.append(worstCaseTile)
     #         linearWeightedVal3 += currVal*weight
     #         weight *= commonRatio
     #     invert = not invert
@@ -175,6 +190,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     # linearWeightedVal4 = 0
     # invert = False
     # weight = 1.
+    # worstCaseTile = (-1, -1)
     
     # for x in range(0,dimension):
     #     for y in range(0,dimension):
@@ -184,7 +200,9 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     #             b_y = dimension - 1 - y
     #         #linearW
     #         currVal=gameState[b_y,b_x]
-           
+    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
+    #                 worstCaseTile = (b_y, b_x)
+    #                 worstCaseTiles.append(worstCaseTile)
     #         linearWeightedVal4 += currVal*weight
     #         weight *= commonRatio
     #     invert = not invert
@@ -193,6 +211,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     # linearWeightedVal5 = 0
     # invert = True
     # weight = 1.
+    # worstCaseTile = (-1, -1)
     
     # for y in range(0,dimension):
     #     for x in range(0,dimension):
@@ -202,7 +221,9 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     #             b_x = dimension - 1 - x
     #         #linearW
     #         currVal=gameState[b_y,b_x]
-          
+    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
+    #                 worstCaseTile = (b_y, b_x)
+    #                 worstCaseTiles.append(worstCaseTile)
     #         linearWeightedVal5 += currVal*weight
     #         weight *= commonRatio
     #     invert = not invert
@@ -210,6 +231,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     # linearWeightedVal6 = 0
     # invert = True
     # weight = 1.
+    # worstCaseTile = (-1, -1)
     
 
     # for x in range(0,dimension):
@@ -220,7 +242,9 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     #             b_y = dimension - 1 - y
     #         #linearW
     #         currVal=gameState[b_y,b_x]
-            
+    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
+    #                 worstCaseTile = (b_y, b_x)
+    #                 worstCaseTiles.append(worstCaseTile)
     #         linearWeightedVal6 += currVal*weight
     #         weight *= commonRatio
     #     invert = not invert
@@ -229,6 +253,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     # linearWeightedVal7 = 0
     # invert = True
     # weight = 1.
+    # worstCaseTile = (-1, -1)
     
     # for y in range(0,dimension):
     #     for x in range(0,dimension):
@@ -238,7 +263,9 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     #             b_x = dimension - 1 - x
     #         #linearW
     #         currVal=gameState[b_y,b_x]
-            
+    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
+    #                 worstCaseTile = (b_y, b_x)
+    #                 worstCaseTiles.append(worstCaseTile)
     #         linearWeightedVal7 += currVal*weight
     #         weight *= commonRatio
     #     invert = not invert
@@ -246,6 +273,7 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
     # linearWeightedVal8 = 0
     # invert = True
     # weight = 1.
+    # worstCaseTile = (-1, -1)
     
     # for x in range(0,dimension):
     #     for y in range(0,dimension):
@@ -257,13 +285,17 @@ def evaluateScore(gameState, dimension, commonRatio=0.15 ):
             
     #         #linearW
     #         currVal=gameState[b_y,b_x]
-      
+    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
+    #                 worstCaseTile = (b_y, b_x)
+    #                 worstCaseTiles.append(worstCaseTile)
     #         linearWeightedVal8 += currVal*weight
     #         weight *= commonRatio
     #     invert = not invert
-        
     
-    maxVal = max(linearWeightedVal,linearWeightedVal2)#,linearWeightedVal3,linearWeightedVal4,linearWeightedVal5,linearWeightedVal6,linearWeightedVal7,linearWeightedVal8)
+    values = np.array([linearWeightedVal,linearWeightedVal2])#,linearWeightedVal3,linearWeightedVal4,linearWeightedVal5,linearWeightedVal6,linearWeightedVal7,linearWeightedVal8])
+    maxVal = values.max()
+    maxarg = np.argmax(values)
+    worstTile = worstCaseTiles[maxarg]
 
-    return maxVal
+    return maxVal, worstTile
 
