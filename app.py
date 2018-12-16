@@ -7,6 +7,7 @@
 
 import sys
 import bot2048 as bot
+from threading import Thread
 
 try:
     import Tkinter as tk
@@ -56,6 +57,8 @@ class Toplevel1:
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
         _ana1color = '#d9d9d9' # X11 color: 'gray85' 
         _ana2color = '#ececec' # Closest X11 color: 'gray92' 
+        font11 = "-family Arial -size 14 -weight normal -slant roman -underline 0 -overstrike 0"
+
         self.style = ttk.Style()
         if sys.platform == "win32":
             self.style.theme_use('winnative')
@@ -65,7 +68,7 @@ class Toplevel1:
         self.style.map('.',background=
             [('selected', _compcolor), ('active',_ana2color)])
 
-        top.geometry("450x250+650+150")
+        top.geometry("450x220+650+150")
         top.title("2048 Bot")
         top.configure(background="#fff")
 
@@ -84,6 +87,7 @@ class Toplevel1:
         self.dimensionCombo.configure(values=self.value_list)
         self.dimensionCombo.configure(textvariable=app_support.combobox)
         self.dimensionCombo.configure(takefocus="")
+        self.dimensionCombo.configure(state="readonly")
         self.dimensionCombo.current(0)
 
         self.Label2 = tk.Label(top)
@@ -101,10 +105,11 @@ class Toplevel1:
         self.algCombo.configure(values=self.value_list2)
         self.algCombo.configure(textvariable=app_support.combobox2)
         self.algCombo.configure(takefocus="")
+        self.algCombo.configure(state="readonly")
         self.algCombo.current(0)
 
         self.startButton = tk.Button(top)
-        self.startButton.place(relx=0.6, rely=0.76, height=40, width=150)
+        self.startButton.place(relx=0.6, rely=0.5, height=40, width=150)
         self.startButton.configure(activebackground="#ececec")
         self.startButton.configure(activeforeground="#000000")
         self.startButton.configure(background="#005b96")
@@ -116,12 +121,53 @@ class Toplevel1:
         self.startButton.configure(pady="0")
         self.startButton.configure(text='''Start''')
         self.startButton.bind('<Button-1>', self.startPlayingButton)
+
+        self.stopButton = tk.Button(top)
+        self.stopButton.place(relx=0.6, rely=0.727, height=42, width=150)
+        self.stopButton.configure(activebackground="#ececec")
+        self.stopButton.configure(activeforeground="#000000")
+        self.stopButton.configure(background="#ff6f69")
+        self.stopButton.configure(disabledforeground="#a3a3a3")
+        self.stopButton.configure(foreground="#fff")
+        self.stopButton.configure(highlightbackground="#d9d9d9")
+        self.stopButton.configure(highlightcolor="black")
+        self.stopButton.configure(pady="0")
+        self.stopButton.configure(text='''Stop''')
+        self.stopButton.bind('<Button-1>', self.stopPlayingButton)
+
+        self.Labelframe1 = tk.LabelFrame(top)
+        self.Labelframe1.place(relx=0.022, rely=0.5, relheight=0.386 , relwidth=0.511)
+        self.Labelframe1.configure(relief='groove')
+        self.Labelframe1.configure(font="Arial")
+        self.Labelframe1.configure(foreground="black")
+        self.Labelframe1.configure(text='''Status''')
+        self.Labelframe1.configure(background="#fff")
+        self.Labelframe1.configure(width=230)
+  
+        self.statusLabel = tk.Label(self.Labelframe1)
+        self.statusLabel.place(relx=0.043, rely=0.353, height=38, width=140, bordermode='ignore')
+        self.statusLabel.configure(background="#fff")
+        self.statusLabel.configure(disabledforeground="#a3a3a3")
+        self.statusLabel.configure(font=font11)
+        self.statusLabel.configure(foreground="#000000")
+        self.statusLabel.configure(text='''STOPPED''')
+
+        self.thread = None
     
     def startPlayingButton(self, event):
         selectedDim = self.dimensionCombo.get()
-        dimension = int(selectedDim[0])
-        alg = self.algCombo.get()
-        bot.startPlaying(dimension, alg)
+        self.dimension = int(selectedDim[0])
+        self.alg = self.algCombo.get()
+        self.thread = Thread(target = self.startBot)
+        self.thread.start()
+        self.statusLabel.configure(text="RUNNING")
+    
+    def startBot(self):
+        bot.startPlaying(self.dimension, self.alg)
+    
+    def stopPlayingButton(self, event):
+        bot.stopPlaying()
+        self.statusLabel.configure(text="STOPPED")
 
 if __name__ == '__main__':
     vp_start_gui()

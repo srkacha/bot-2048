@@ -126,7 +126,6 @@ def suggestNextMove(gameState, dimension, algorithm):
     if gameState == None: return
     move = -1
     
-    print(algorithm)
     #determining the move based on the algorithm
     if algorithm == 'Random':
         move = randomPlayer.randomMove(gameState, dimension)
@@ -152,7 +151,6 @@ activeFlag = True
 def startPlaying(dimension, algorithm):
     global activeFlag
     activeFlag = True
-    time.sleep(5)
 
     while activeFlag:
         screenshot = pyautogui.screenshot()
