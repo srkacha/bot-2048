@@ -1,17 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec 16 10:56:12 2018
-
-@author: djuricic
-"""
-
 import sys
 import Board
 import numpy as np
 import math
 
 def getDirection(board, depth):
-
+    test = 0
     direction, score = alphabeta(board, depth, -sys.maxsize, +sys.maxsize, 0)
     board.move(direction)
     score = board.get_score()
