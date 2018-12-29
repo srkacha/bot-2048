@@ -102,7 +102,7 @@ class Toplevel1:
         self.algCombo = ttk.Combobox(top)
         self.algCombo.place(relx=0.422, rely=0.222, relheight=0.115
                 , relwidth=0.54)
-        self.value_list2 = ['Random','Greedy','Monotonic Decreasing','Expectimax']
+        self.value_list2 = ['Random','Greedy','Monotonic Decreasing','Minimax']
         self.algCombo.configure(values=self.value_list2)
         self.algCombo.configure(textvariable=app_support.combobox2)
         self.algCombo.configure(takefocus="")

@@ -143,7 +143,7 @@ def suggestNextMove(gameState, dimension, algorithm):
         gameState = np.reshape(gameState, (dimension,dimension))
         board = Board.Board(gameState,score)
     
-        move,score = alphabeta.getDirection(board, 5)# mdp.nextMove(gameState, dimension)
+        move,score = alphabeta.getDirection(board, 3)# mdp.nextMove(gameState, dimension)
     
     if move == 0:
         keyboard.press(Key.up)
