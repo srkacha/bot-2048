@@ -184,6 +184,7 @@ class Toplevel1:
     
     def startBot(self):
         bot.startPlaying(self.dimension, self.alg)
+        self.statusLabel.configure(text="STOPPED")
     
     def stopPlayingButton(self, event):
         bot.stopPlaying()

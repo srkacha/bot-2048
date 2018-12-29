@@ -152,11 +152,14 @@ def startPlaying(dimension, algorithm):
     global activeFlag
     activeFlag = True
 
-    while activeFlag:
-        screenshot = pyautogui.screenshot()
-        screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
-        gameState = getGameStateMatrix(screenshot, dimension)
-        suggestNextMove(gameState, dimension, algorithm)
+    try:
+         while activeFlag:
+            screenshot = pyautogui.screenshot()
+            screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+            gameState = getGameStateMatrix(screenshot, dimension)
+            suggestNextMove(gameState, dimension, algorithm)
+    except:
+        activeFlag = False
 
 def stopPlaying():
     global activeFlag

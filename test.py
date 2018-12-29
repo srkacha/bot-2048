@@ -19,5 +19,5 @@ while True:
     screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
     gameState = bot.getGameStateMatrix(screenshot, dim)
     #print(gameState)
-    bot.suggestNextMove(gameState, dim)
+    bot.suggestNextMove(gameState, dim, 'Monotonic Decreasing')
 
