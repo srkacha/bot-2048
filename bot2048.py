@@ -11,6 +11,8 @@ import pyautogui
 import greedy
 import randomPlayer
 import monotonicDecreasingPlayer as mdp
+import alphabeta
+import Board
 
 #lookup table for storing base number representation values
 digitsLookup = {
@@ -121,6 +123,8 @@ def getGameStateMatrix(gameImage, dimension = 4):
 #global keyborad object
 keyboard = Controller()
 
+
+score = 0
 #function takes the game state tupple and dimension and plays the next move
 def suggestNextMove(gameState, dimension, algorithm):
     if gameState == None: return
@@ -133,7 +137,13 @@ def suggestNextMove(gameState, dimension, algorithm):
         move = greedy.greedyMove(gameState, dimension)
     elif algorithm == 'Monotonic Decreasing':
         move = mdp.nextMove(gameState, dimension)
+    elif algorithm == 'Minimax':
+        global score
+        gameState = np.asarray(gameState)
+        gameState = np.reshape(gameState, (dimension,dimension))
+        board = Board.Board(gameState,score)
     
+        move,score = alphabeta.getDirection(board, 5)# mdp.nextMove(gameState, dimension)
     
     if move == 0:
         keyboard.press(Key.up)
