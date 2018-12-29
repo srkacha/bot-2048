@@ -143,7 +143,7 @@ def suggestNextMove(gameState, dimension, algorithm):
         gameState = np.reshape(gameState, (dimension,dimension))
         board = Board.Board(gameState,score)
     
-        move,score = alphabeta.getDirection(board, 3)# mdp.nextMove(gameState, dimension)
+        move,score = alphabeta.getDirection(board, 4)# mdp.nextMove(gameState, dimension)
     
     if move == 0:
         keyboard.press(Key.up)
@@ -168,8 +168,10 @@ def startPlaying(dimension, algorithm):
             screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
             gameState = getGameStateMatrix(screenshot, dimension)
             suggestNextMove(gameState, dimension, algorithm)
-    except:
+    except Exception as err:
+        print(err)
         activeFlag = False
+
 
 def stopPlaying():
     global activeFlag

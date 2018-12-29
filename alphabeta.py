@@ -10,17 +10,32 @@ def getDirection(board, depth):
     score = board.get_score()
     return direction,score
 
+weightMatrix = np.matrix([[14348907, 4782969, 1594323, 531441],
+                                [6561,19683,59049,177147],
+                                [2187, 729, 243, 81],
+                                [1,3,9,27]])
+
+
 def heuristicScore(board):
-    score = board.get_score()
+    # score = board.get_score()
    
-    maxVal = board.getMaxValue()
-    gameStateMatrix = board.get_gameStateMatrix()
-    clustScore = calculateClusteringScore(board.get_gameStateMatrix())
-    if maxVal != gameStateMatrix[0][0]:
-       score /=2 
-       clustScore /= 20
-    hs = int((score + math.log(score+1)*board.getNumberOfEmptyCells() - clustScore)) 
-    return hs
+    # maxVal = board.getMaxValue()
+    # gameStateMatrix = board.get_gameStateMatrix()
+    # clustScore = calculateClusteringScore(board.get_gameStateMatrix())
+    # if maxVal != gameStateMatrix[0][0]:
+    #    score /=2 
+    #    clustScore /= 20
+    # hs = int((score + math.log(score+1)*board.getNumberOfEmptyCells() - clustScore)) 
+    score1 =  np.multiply(board.get_gameStateMatrix(), weightMatrix).sum()
+    score2 =  np.multiply(board.get_gameStateMatrix(), np.transpose(weightMatrix)).sum()
+    score3 =  np.multiply(board.get_gameStateMatrix(), np.flip(weightMatrix, 1)).sum()
+    score4 =  np.multiply(board.get_gameStateMatrix(), np.flip(np.transpose(weightMatrix), 1)).sum()
+    score5 =  np.multiply(board.get_gameStateMatrix(), np.flip(weightMatrix, 0)).sum()
+    score6 =  np.multiply(board.get_gameStateMatrix(), np.flip(np.transpose(weightMatrix), 0)).sum()
+    score7 =  np.multiply(board.get_gameStateMatrix(), np.flip(np.flip(weightMatrix, 1), 0)).sum()
+    score8 =  np.multiply(board.get_gameStateMatrix(), np.flip(np.flip(np.transpose(weightMatrix), 1), 0)).sum()
+
+    return np.max([score1, score2, score3, score4 ,score5, score6, score7, score8])
 
 def calculateClusteringScore(gameStateMatrix):
 
