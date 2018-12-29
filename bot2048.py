@@ -8,6 +8,8 @@ import numpy as np
 import greedy
 import randomPlayer
 import monotonicDecreasingPlayer as mdp
+import alphabeta
+import Board
 
 #lookup table for storing base number representation values
 digitsLookup = {
@@ -118,11 +120,17 @@ def getGameStateMatrix(gameImage, dimension = 4):
 #global keyborad object
 keyboard = Controller()
 
+
+score = 0
 #function takes the game state tupple and dimension and plays the next move
 def suggestNextMove(gameState, dimension):
+    global score
     if gameState == None: return
-    
-    nextMove = mdp.nextMove(gameState, dimension)
+    gameState = np.asarray(gameState)
+    gameState = np.reshape(gameState, (dimension,dimension))
+    board = Board.Board(gameState,score)
+
+    nextMove,score = alphabeta.getDirection(board, 5)# mdp.nextMove(gameState, dimension)
     if nextMove == 0:
         keyboard.press(Key.up)
     elif nextMove == 1:
