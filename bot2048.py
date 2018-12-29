@@ -5,6 +5,9 @@ import time
 import cv2
 import sys
 import numpy as np
+import pyautogui
+
+#players
 import greedy
 import randomPlayer
 import monotonicDecreasingPlayer as mdp
@@ -123,19 +126,48 @@ keyboard = Controller()
 
 score = 0
 #function takes the game state tupple and dimension and plays the next move
-def suggestNextMove(gameState, dimension):
-    global score
+def suggestNextMove(gameState, dimension, algorithm):
     if gameState == None: return
-    gameState = np.asarray(gameState)
-    gameState = np.reshape(gameState, (dimension,dimension))
-    board = Board.Board(gameState,score)
-
-    nextMove,score = alphabeta.getDirection(board, 5)# mdp.nextMove(gameState, dimension)
-    if nextMove == 0:
+    move = -1
+    
+    #determining the move based on the algorithm
+    if algorithm == 'Random':
+        move = randomPlayer.randomMove(gameState, dimension)
+    elif algorithm == 'Greedy':
+        move = greedy.greedyMove(gameState, dimension)
+    elif algorithm == 'Monotonic Decreasing':
+        move = mdp.nextMove(gameState, dimension)
+    elif algorithm == 'Minimax':
+        global score
+        gameState = np.asarray(gameState)
+        gameState = np.reshape(gameState, (dimension,dimension))
+        board = Board.Board(gameState,score)
+    
+        move,score = alphabeta.getDirection(board, 5)# mdp.nextMove(gameState, dimension)
+    
+    if move == 0:
         keyboard.press(Key.up)
-    elif nextMove == 1:
+    elif move == 1:
         keyboard.press(Key.right)
-    elif nextMove == 2:
+    elif move == 2:
         keyboard.press(Key.down)
-    elif nextMove == 3:
+    elif move == 3:
         keyboard.press(Key.left)
+
+
+#fuctions that make it all run together
+activeFlag = True
+
+def startPlaying(dimension, algorithm):
+    global activeFlag
+    activeFlag = True
+
+    while activeFlag:
+        screenshot = pyautogui.screenshot()
+        screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
+        gameState = getGameStateMatrix(screenshot, dimension)
+        suggestNextMove(gameState, dimension, algorithm)
+
+def stopPlaying():
+    global activeFlag
+    activeFlag = False

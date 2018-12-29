@@ -38,7 +38,7 @@ def getGameField(gameImage):
 #returns list of block image objects for given game field image object
 def getFieldBlocks(gameField, dimension):
     #dimesnion needs to be 4,5 or 6
-    if dimension not in np.array((4,5,6)): return None
+    if dimension not in np.array((4,5,8)): return None
     fieldBlocks = []
     blockWidth = len(gameField)/dimension
     blockHeight = len(gameField)//dimension
