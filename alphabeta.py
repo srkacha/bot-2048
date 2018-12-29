@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec 16 10:56:12 2018
-
-@author: djuricic
-"""
-
 import sys
 import Board
 import numpy as np
