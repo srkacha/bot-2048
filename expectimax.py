@@ -130,6 +130,7 @@ def evaluateScore(gameState, dimension = 4):
                 penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex][colIndex - 1])
 
     score = np.max([score1, score2])
+    finalScore = score
 
     if gameState.max() != gameState[0][0]: finalScore = score/100
     return finalScore
