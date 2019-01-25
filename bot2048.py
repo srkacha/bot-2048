@@ -12,6 +12,7 @@ import greedy
 import randomPlayer
 import monotonicDecreasingPlayer as mdp
 import alphabeta
+import expectimax
 import Board
 
 #lookup table for storing base number representation values
@@ -53,15 +54,8 @@ def calculateNumberRepresentation(numberImage):
 
 
 #looks up the number based on its six point representation
-#uses cosine similarity for determening the similarity between two vectors
+#uses ssd for determening the similarity between two vectors
 def determineNumber(numRepresentation):
-    # maxSimilarity = 0
-    # bestMatchValue = -1
-    # for key, value in digitsLookup.items():
-    #     cosSimilarity = 1 - spatial.distance.cosine(numRepresentation, key)
-    #     if cosSimilarity > maxSimilarity:
-    #         maxSimilarity = cosSimilarity
-    #         bestMatchValue = value
     minSsdSim = sys.maxsize
     bestMatchValue = -1
     for key, value in digitsLookup.items():
@@ -110,7 +104,6 @@ def getGameStateMatrix(gameImage, dimension = 4):
     for block in gameBlocks:
         digitImages = iu.getNumbers(block)
         blockValue = generateNumber(digitImages)
-        #print(blockValue)
         #if we get None or some number that is not power of two, we return None
         if blockValue == None: return None
         if blockValue != 0 and blockValue not in [2,4,8,16,32,64,128,256,512,1024,2048, 4096, 8192]: return None
@@ -138,12 +131,9 @@ def suggestNextMove(gameState, dimension, algorithm):
     elif algorithm == 'Monotonic Decreasing':
         move = mdp.nextMove(gameState, dimension)
     elif algorithm == 'Minimax':
-        global score
-        gameState = np.asarray(gameState)
-        gameState = np.reshape(gameState, (dimension,dimension))
-        board = Board.Board(gameState,score)
-    
-        move,score = alphabeta.getDirection(board, 4)# mdp.nextMove(gameState, dimension)
+        move,score = alphabeta.getDirection(gameState, dimension, 3)
+    elif algorithm == 'Expectimax':
+        move = expectimax.nextMove(gameState, dimension)
     
     if move == 0:
         keyboard.press(Key.up)

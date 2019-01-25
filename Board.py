@@ -154,32 +154,3 @@ class Board:
 
     def setCell(self, i, j, val):
         self.gameStateMatrix[i][j] = val
-# test
-gameState = np.array([[2,2,2,2], [2,2,2,2], [0,0,0,0], [0,0,0,0]])
-board = Board(gameState, 0)
-print(board.move(3))
-print(board.get_score())
-print(board.move(3))
-print(board.get_score())
-print(board.move(0))
-print(board.get_score())
-# =============================================================================
-# 
-# 
-# board1.move(1)
-# print(board1.get_gameStateMatrix())
-# 
-# board1.move(2)
-# print(board1.get_gameStateMatrix())
-# 
-# 
-# board1.move(3)
-# print(board1.get_gameStateMatrix())
-# 
-# board1.move(0)
-# print(board1.get_gameStateMatrix())
-# 
-# print(board1.get_score())
-# 
-# =============================================================================
-

@@ -6,12 +6,12 @@ import numpy as np
 import time
 import imageio
 
-#file for testing 
-#pozz djuka
+#file used for testing the functions
 
 #waiting so I can open the game
 time.sleep(5)
 
+#game dimension
 dim = 4
 
 while True:

@@ -81,27 +81,32 @@ def nextMove(gameStateMatrix, dimension, recursionDepth = 3):
     move, score = nextMoveRecursion(reshaped, dimension, recursionDepth, recursionDepth)
     return move
 
+def addCriticalTile(gameStateMatrix):
+    for i, row in enumerate(gameStateMatrix):
+        for j, el in enumerate(row):
+            if gameStateMatrix[i][j] == 0:
+                gameStateMatrix[i][j] = 2
+                return gameStateMatrix
+    return gameStateMatrix
+
 #recursivly calculates the heursitic score for a given depth and base parameter
 #base parameter determines how much the score is affected the deeper the algorithm goes
-def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 0.9):
+def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 1):
     bestScore = -1
     bestMove = 0
-    movesPossible = 0
     for move in range(0, 4):
         if isMoveValid(gameStateMatrix, dimension, move):
-            movesPossible += 1
             newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=False)
-            score, worstTile = evaluateScore(newGameState, dimension)
+            score = evaluateScore(newGameState, dimension)
 
-            #newGameState[worstTile[0]][worstTile[1]] = 2 if random.uniform(0,1) < 0.9 else 4
             if depth != 0:
                 result_move, result_score = nextMoveRecursion(newGameState, dimension, depth - 1, maxDepth)
-                score *= result_score*pow(base, maxDepth - depth + 1)
+                score += result_score*pow(base, maxDepth - depth + 1)
 
             if score > bestScore:
                 bestScore = score
                 bestMove = move
-    return bestMove, bestScore**(1/2)
+    return bestMove, bestScore
 
 #determines if the move is valid or not
 #move can be 0, 1, 2 or 3
@@ -120,192 +125,40 @@ def isMoveValid(gameStateMatrix, dimension, move):
     else:
         return True
 
-weightMatrix = np.matrix([[14348907, 4782969, 1594323, 531441],
-                                [6561,19683,59049,177147],
-                                [2187, 729, 243, 81],
-                                [1,3,9,27]])
+def generateWeightedMatrix(dimension = 4, alpha = 0.25):
+    maxWeight = 1
+    flip = False
+    matrix = np.zeros((dimension, dimension))
+    for row in matrix:
+        for index in range(0, dimension):
+            row[index] = maxWeight
+            maxWeight = maxWeight*alpha
+        if flip:
+            row = np.flip(row)
+        flip = not flip
+    return matrix
 
-def evaluateScore(gameState, dimension, commonRatio=0.25):
-    
-    # linearWeightedVal = 0
-    # weight = 1.
-    # invert = False
+#weighted matrixes for different game dimensions
+wmat4 = generateWeightedMatrix(alpha = 0.25)
+wmat5 = generateWeightedMatrix(5, alpha = 0.25)
+wmat8 = generateWeightedMatrix(8, alpha = 0.25)
 
-    # worstCaseTiles = []
-    # worstCaseTile = (-1, -1)
-    
-    # for y in range(0,dimension):
-    #         for x in range(0,dimension):
-    #             b_x = x
-    #             b_y = y
-    #             if invert:
-    #                 b_x = dimension - 1 - x
-    #             #linearW
-    #             currVal=gameState[b_y,b_x]
-    #             if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
+def evaluateScore(gameState, dimension):
+    if dimension == 4: weightMatrix = wmat4
+    elif dimension == 5: weightMatrix = wmat5
+    else: weightMatrix = wmat8
 
-    #             linearWeightedVal += currVal*weight
-    #             weight *= commonRatio
-    #         invert = not invert
-            
-    # linearWeightedVal2 = 0
-    # invert = False
-    # weight = 1.
-    # worstCaseTile = (-1, -1)
-    
-    # for x in range(0,dimension):
-    #     for y in range(0,dimension):
-    #         b_x = x
-    #         b_y = y
-    #         if invert:
-    #             b_y = dimension - 1 - y
-    #         #linearW
-    #         currVal=gameState[b_y,b_x]
-    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
+    freeSpace = (gameState == 0).sum()
+   
+    score1 =  np.multiply(gameState, weightMatrix).sum()
+    score2 =  np.multiply(gameState, np.transpose(weightMatrix)).sum()
 
-    #         linearWeightedVal2 += currVal*weight
-    #         weight *= commonRatio
-    #     invert = not invert
-        
-    
-    # linearWeightedVal3 = 0
-    # invert = False
-    # weight = 1.
-    # worstCaseTile = (-1, -1)
-    
-    # for y in range(0,dimension):
-    #     for x in range(0,dimension):
-    #         b_x = x
-    #         b_y = dimension - 1 - y
-    #         if invert:
-    #             b_x = dimension - 1 - x
-    #         #linearW
-    #         currVal=gameState[b_y,b_x]
-    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
-    #         linearWeightedVal3 += currVal*weight
-    #         weight *= commonRatio
-    #     invert = not invert
-        
-    # linearWeightedVal4 = 0
-    # invert = False
-    # weight = 1.
-    # worstCaseTile = (-1, -1)
-    
-    # for x in range(0,dimension):
-    #     for y in range(0,dimension):
-    #         b_x = dimension - 1 - x
-    #         b_y = y
-    #         if invert:
-    #             b_y = dimension - 1 - y
-    #         #linearW
-    #         currVal=gameState[b_y,b_x]
-    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
-    #         linearWeightedVal4 += currVal*weight
-    #         weight *= commonRatio
-    #     invert = not invert
-        
-        
-    # linearWeightedVal5 = 0
-    # invert = True
-    # weight = 1.
-    # worstCaseTile = (-1, -1)
-    
-    # for y in range(0,dimension):
-    #     for x in range(0,dimension):
-    #         b_x = x
-    #         b_y = y
-    #         if invert:
-    #             b_x = dimension - 1 - x
-    #         #linearW
-    #         currVal=gameState[b_y,b_x]
-    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
-    #         linearWeightedVal5 += currVal*weight
-    #         weight *= commonRatio
-    #     invert = not invert
-        
-    # linearWeightedVal6 = 0
-    # invert = True
-    # weight = 1.
-    # worstCaseTile = (-1, -1)
-    
+    scores = np.array([score1, score2])
+    scores = (scores*freeSpace*2)/dimension**2
 
-    # for x in range(0,dimension):
-    #     for y in range(0,dimension):
-    #         b_x = x
-    #         b_y = y
-    #         if invert:
-    #             b_y = dimension - 1 - y
-    #         #linearW
-    #         currVal=gameState[b_y,b_x]
-    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
-    #         linearWeightedVal6 += currVal*weight
-    #         weight *= commonRatio
-    #     invert = not invert
-        
-    
-    # linearWeightedVal7 = 0
-    # invert = True
-    # weight = 1.
-    # worstCaseTile = (-1, -1)
-    
-    # for y in range(0,dimension):
-    #     for x in range(0,dimension):
-    #         b_x = x
-    #         b_y = dimension - 1 - y
-    #         if invert:
-    #             b_x = dimension - 1 - x
-    #         #linearW
-    #         currVal=gameState[b_y,b_x]
-    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
-    #         linearWeightedVal7 += currVal*weight
-    #         weight *= commonRatio
-    #     invert = not invert
-        
-    # linearWeightedVal8 = 0
-    # invert = True
-    # weight = 1.
-    # worstCaseTile = (-1, -1)
-    
-    # for x in range(0,dimension):
-    #     for y in range(0,dimension):
-    #         b_x = dimension - 1 - x
-    #         b_y = y
-            
-    #         if invert:
-    #             b_y = dimension - 1 - y
-            
-    #         #linearW
-    #         currVal=gameState[b_y,b_x]
-    #         if(currVal == 0 and worstCaseTile == (-1, -1)):
-    #                 worstCaseTile = (b_y, b_x)
-    #                 worstCaseTiles.append(worstCaseTile)
-    #         linearWeightedVal8 += currVal*weight
-    #         weight *= commonRatio
-    #     invert = not invert
-    
-    # values = np.array([linearWeightedVal,linearWeightedVal2])#,linearWeightedVal3,linearWeightedVal4,linearWeightedVal5,linearWeightedVal6,linearWeightedVal7,linearWeightedVal8])
-    # maxVal = values.max()
-    # freeSpace = (gameState == 0).sum()
-    # totalSpace = dimension**2
-    # #maxVal = (maxVal * freeSpace)/totalSpace
-    # if maxVal != gameState[0, 0] and maxVal != gameState[0, dimension - 1] and maxVal != gameState[dimension - 1, 0] and maxVal != gameState[dimension - 1, dimension - 1]:
-    #     maxVal = maxVal/4
-    # maxarg = np.argmax(values)
-    # worstTile = worstCaseTiles[maxarg]
+    if gameState[0][0] != gameState.max():
+        scores = scores/100
 
-    return np.multiply(gameState, weightMatrix).sum(), None
+    return np.max(scores)
+    
 
