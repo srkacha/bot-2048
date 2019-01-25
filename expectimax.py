@@ -1,5 +1,6 @@
 import numpy as np
 import time 
+import math
 
 def determineNextGameState(gameStateMatrix, dimension, direction):
     nextMoveMatrix = 0
@@ -89,7 +90,7 @@ def generateWeightedMatrix(dimension = 4, alpha = 0.25):
     return matrix
 
 #weighted matrixes for different game dimensions
-wmat4 = generateWeightedMatrix(alpha = 0.25)
+wmat4 = generateWeightedMatrix(alpha = 0.15)
 wmat5 = generateWeightedMatrix(5, alpha = 0.25)
 wmat8 = generateWeightedMatrix(8, alpha = 0.25)
 
@@ -105,34 +106,29 @@ def evaluateScore(gameState, dimension = 4):
     elif dimension == 5: weightMatrix = wmat5
     else: weightMatrix = wmat8
     
-    freeSpace = (gameState == 0).sum()
     finalScore = 0
-
-    #weights
-    penaltyWeight = 0.05
-    freeSapceBonusWeigth = 0.7
    
     #monotonicity property
     score1 =  np.multiply(gameState, weightMatrix).sum()
     score2 =  np.multiply(gameState, np.transpose(weightMatrix)).sum()
 
-    #calculating the penalty
-    penalty = 0
+    #counting the matches
+    matchCounter = 0
     for rowIndex, row in enumerate(gameState):
         for colIndex, element in enumerate(row):
             if rowIndex<dimension - 1:
-                penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex + 1][colIndex])
+                if gameState[rowIndex][colIndex] == gameState[rowIndex + 1][colIndex]: matchCounter += 1
             if colIndex < dimension - 1:
-                penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex][colIndex + 1])
+                if gameState[rowIndex][colIndex] == gameState[rowIndex][colIndex + 1]: matchCounter += 1
             if rowIndex>0:
-                penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex - 1][colIndex])
+                if gameState[rowIndex][colIndex] == gameState[rowIndex - 1][colIndex]: matchCounter += 1
             if colIndex >0:
-                penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex][colIndex - 1])
+                if gameState[rowIndex][colIndex] == gameState[rowIndex][colIndex -1]: matchCounter += 1
 
     score = np.max([score1, score2])
-    finalScore = score
+    finalScore = score + score*((matchCounter)/100)
 
-    if gameState.max() != gameState[0][0]: finalScore = score/100
+    if gameState.max() != gameState[0][0]: finalScore = math.pow(finalScore, 1/2)
     return finalScore
 
 
@@ -173,8 +169,8 @@ def nextMove(gameStateMatrix, dimension):
     gameStateMatrix = np.reshape(gameStateMatrix, (dimension,dimension))
     freeSpace = (gameStateMatrix == 0).sum()
     if freeSpace > 4:
-        score, move = expectimax(gameStateMatrix, dimension, depth=3)
+        score, move = expectimax(gameStateMatrix, dimension, depth=2)
     elif freeSpace > 2:
         score, move = expectimax(gameStateMatrix, dimension, depth=4)
-    else: score, move = expectimax(gameStateMatrix, dimension, depth=5)
+    else: score, move = expectimax(gameStateMatrix, dimension, depth=4)
     return move
