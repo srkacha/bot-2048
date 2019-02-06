@@ -131,7 +131,7 @@ def suggestNextMove(gameState, dimension, algorithm):
     elif algorithm == 'Monotonic Decreasing':
         move = mdp.nextMove(gameState, dimension)
     elif algorithm == 'Minimax':
-        move,score = alphabeta.getDirection(gameState, dimension, 3)
+        move,score = alphabeta.getDirection(gameState, dimension, 2)
     elif algorithm == 'Expectimax':
         move = expectimax.nextMove(gameState, dimension)
     

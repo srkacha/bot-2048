@@ -1,6 +1,6 @@
 import numpy as np
 import random
-
+import math
 #determines the future game state when a move is played
 #returns game state matrix as np multi dim array
 #direction can be 0 - up, 1 - right, 2- down and 3 - left
@@ -23,7 +23,7 @@ def determineNextGameState(gameStateMatrix, dimension, direction, generateNewTil
             randomRow = random.randint(0, dimension - 1)
             randomCol = random.randint(0, dimension - 1)
             if nextMoveMatrix[randomRow][randomCol] == 0:
-                nextMoveMatrix[randomRow][randomCol] = 2 if randomNumber<0.9 else 2
+                nextMoveMatrix[randomRow][randomCol] = 2 if randomNumber<0.9 else 4
                 generated = True
 
     return nextMoveMatrix
@@ -96,7 +96,7 @@ def nextMoveRecursion(gameStateMatrix, dimension, depth, maxDepth, base = 1):
     bestMove = 0
     for move in range(0, 4):
         if isMoveValid(gameStateMatrix, dimension, move):
-            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=False)
+            newGameState = determineNextGameState(gameStateMatrix, dimension, move, generateNewTile=True)
             score = evaluateScore(newGameState, dimension)
 
             if depth != 0:
@@ -147,18 +147,17 @@ def evaluateScore(gameState, dimension):
     if dimension == 4: weightMatrix = wmat4
     elif dimension == 5: weightMatrix = wmat5
     else: weightMatrix = wmat8
-
-    freeSpace = (gameState == 0).sum()
    
+    finalScore = 0
+   
+    #monotonicity property
     score1 =  np.multiply(gameState, weightMatrix).sum()
     score2 =  np.multiply(gameState, np.transpose(weightMatrix)).sum()
 
-    scores = np.array([score1, score2])
-    scores = (scores*freeSpace*2)/dimension**2
+    score = np.max([score1, score2])
+    finalScore = score
 
-    if gameState[0][0] != gameState.max():
-        scores = scores/100
-
-    return np.max(scores)
+    if gameState.max() != gameState[0][0]: finalScore = math.pow(finalScore, 1/2)
+    return finalScore
     
 

@@ -90,7 +90,7 @@ def generateWeightedMatrix(dimension = 4, alpha = 0.25):
     return matrix
 
 #weighted matrixes for different game dimensions
-wmat4 = generateWeightedMatrix(alpha = 0.15)
+wmat4 = generateWeightedMatrix(alpha = 0.25)
 wmat5 = generateWeightedMatrix(5, alpha = 0.25)
 wmat8 = generateWeightedMatrix(8, alpha = 0.25)
 
@@ -105,6 +105,8 @@ def evaluateScore(gameState, dimension = 4):
     if dimension == 4: weightMatrix = wmat4
     elif dimension == 5: weightMatrix = wmat5
     else: weightMatrix = wmat8
+
+    freeSpace = (gameState == 0).sum()
     
     finalScore = 0
    
@@ -112,23 +114,24 @@ def evaluateScore(gameState, dimension = 4):
     score1 =  np.multiply(gameState, weightMatrix).sum()
     score2 =  np.multiply(gameState, np.transpose(weightMatrix)).sum()
 
-    #counting the matches
-    matchCounter = 0
-    for rowIndex, row in enumerate(gameState):
-        for colIndex, element in enumerate(row):
-            if rowIndex<dimension - 1:
-                if gameState[rowIndex][colIndex] == gameState[rowIndex + 1][colIndex]: matchCounter += 1
-            if colIndex < dimension - 1:
-                if gameState[rowIndex][colIndex] == gameState[rowIndex][colIndex + 1]: matchCounter += 1
-            if rowIndex>0:
-                if gameState[rowIndex][colIndex] == gameState[rowIndex - 1][colIndex]: matchCounter += 1
-            if colIndex >0:
-                if gameState[rowIndex][colIndex] == gameState[rowIndex][colIndex -1]: matchCounter += 1
+    #penalty for not benig monotonic
+    # penalty = 0
+    # for rowIndex, row in enumerate(gameState):
+    #     for colIndex, element in enumerate(row):
+    #         if rowIndex<dimension - 1:
+    #             penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex + 1][colIndex])
+    #         if colIndex < dimension - 1:
+    #             penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex][colIndex + 1])
+    #         if rowIndex>0:
+    #             penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex - 1][colIndex])
+    #         if colIndex >0:
+    #             penalty += abs(gameState[rowIndex][colIndex] - gameState[rowIndex][colIndex - 1])
+    # penalty = penalty/2
+    # maxPenalty = gameState.sum()*2
+    finalScore = np.max([score1, score2])
+    # finalScore = finalScore + 0.2*finalScore*maxPenalty/penalty
 
-    score = np.max([score1, score2])
-    finalScore = score + score*((matchCounter)/100)
-
-    if gameState.max() != gameState[0][0]: finalScore = math.pow(finalScore, 1/2)
+    if gameState.max() != gameState[0][0]: finalScore = finalScore/100
     return finalScore
 
 
@@ -168,9 +171,9 @@ def nextMove(gameStateMatrix, dimension):
     gameStateMatrix = np.asarray(gameStateMatrix)
     gameStateMatrix = np.reshape(gameStateMatrix, (dimension,dimension))
     freeSpace = (gameStateMatrix == 0).sum()
-    if freeSpace > 4:
+    if freeSpace > 6:
         score, move = expectimax(gameStateMatrix, dimension, depth=2)
-    elif freeSpace > 2:
+    elif freeSpace > 3:
         score, move = expectimax(gameStateMatrix, dimension, depth=4)
     else: score, move = expectimax(gameStateMatrix, dimension, depth=4)
     return move

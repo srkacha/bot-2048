@@ -44,11 +44,12 @@ def heuristicScore(board, dimension, prob):
     score2 =  np.multiply(board.get_gameStateMatrix(), np.transpose(weightMatrix)).sum()
 
     scores = np.array([score1, score2])
+    score = np.max(scores)
 
     if board.get_gameStateMatrix()[0][0] != board.get_gameStateMatrix().max():
-        scores = scores/100
+        score = score/100
 
-    return np.max(scores)
+    return score
  
     
 def alphabeta(board, dimension, depth, alpha, beta, player, prob = 1):
